@@ -1,5 +1,8 @@
 package shop.mtcoding.blog.board;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class BoardController {
 
-    private final BoardRepository boardRepository;
 
     @GetMapping("/")
     public String index() {
@@ -22,7 +24,12 @@ public class BoardController {
     }
 
     @GetMapping("/board/{id}/updateForm")
-    public String updateForm(@PathVariable int id) {
+    public String updateForm(@PathVariable("id") int id, HttpServletRequest request, HttpServletResponse response) {
+        Cookie cookie = new Cookie("boardId", id + "");
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+
+        request.setAttribute("boardId", id);
         return "board/updateForm";
     }
 }
